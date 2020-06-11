@@ -10,26 +10,11 @@ from xml.dom import minidom
 from xml.etree.ElementTree import Element, SubElement, tostring, ElementTree
 from io import BytesIO
 
-def main(argv):
-    global filemovie
+if len(sys.argv) != 2:
+    print("usage: youtube-dl2kodi <FILENAME>")
+    sys.exit(1)
 
-    try:
-        opts, args = getopt.getopt(argv, "h:f:", ["file="])
-    except getopt.GetoptError:
-        print('youtube-dl2kodi.py -f <inputfile>')
-        sys.exit(2)
-    for opt, arg in opts:
-        if opt == '-h':
-            print('youtube-dl2kodi.py -f <inputfile>')
-            sys.exit()
-        elif opt == '-f':
-            filemovie = arg
-           # filemovie = filemovie.replace("'","")
-    print 'JSON file is "', filemovie
-
-if __name__ == "__main__":
-   main(sys.argv[1:])
-filemoviefullname = filemovie
+filemovie = '.'.join(sys.argv[1].split('.')[:-1]) # strip .mkv when run via --exec
 filemoviedir = os.path.dirname(filemovie);
 filemovie = os.path.splitext(filemovie)[0]
 filemovieext = os.path.splitext(filemovie)[1]
@@ -75,14 +60,14 @@ root_t =  ElementTree(root)
 e = BytesIO()
 root_t.write(e, encoding='utf-8', xml_declaration=True)
 
-with open(filenfo, "w") as f:
+with open(filenfo, "bw") as f:
       f.write(e.getvalue())
-os.remove(filejson)
+# os.remove(filejson)
 
 root_tvshow_t = ElementTree(root_tvshow)
 s = BytesIO()
 root_tvshow_t.write(s, encoding='utf-8', xml_declaration=True)
 
 if not os.path.isfile(tvshownfo):
-    with open(tvshownfo, "w") as f:
+    with open(tvshownfo, "wb") as f:
       f.write(s.getvalue())
